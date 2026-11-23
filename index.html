@@ -476,7 +476,7 @@ if(EDIT){
   $('#pen').hidden=true;
   const eb=document.createElement('div');eb.id='editbar';
   const canPub=!!(window.RO_KEY&&window.RO_ENC);
-  eb.innerHTML='<span id="eb-n" class="tm"></span><button class="btn" id="eb-undo" type="button" disabled>Annulla</button>'+(canPub?'<button class="btn" id="eb-pub" type="button" disabled>Pubblica modifiche</button><button class="btn" id="eb-forget" type="button" title="Rimuove il token salvato su questo dispositivo">Dimentica token</button>':'<button class="btn" id="eb-copy" type="button">Copia modifiche</button>');
+  eb.innerHTML='<span id="eb-n" class="tm"></span><button class="btn" id="eb-undo" type="button" disabled>Annulla</button>'+(canPub?'<button class="btn" id="eb-pub" type="button" disabled>Pubblica modifiche</button>':'<button class="btn" id="eb-copy" type="button">Copia modifiche</button>');
   $('#actions').appendChild(eb);
   const LOAD={st:{},dt:{}};TASKS.forEach(t=>LOAD.st[t.id]=t.status);ITEMS.forEach(i=>LOAD.dt[i.id]=[i.start,i.end]);
   let drag=null,moved=false;
@@ -501,11 +501,11 @@ if(EDIT){
   if($('#eb-copy'))$('#eb-copy').onclick=()=>{const s=curState();const t=Object.keys(s.dates).map(id=>`${id} | ${itemById[id].name} | ${itemById[id].start} → ${itemById[id].end} | ${GG(itemById[id].start,itemById[id].end)}`).concat(Object.keys(s.status).map(id=>`${id} | stato: ${STATUSES[s.status[id]]}`)).join('\n')||'Nessuna modifica';
     const done=()=>{$('#eb-n').textContent='Copiato'};
     try{navigator.clipboard.writeText(t).then(done,()=>{prompt('Copia manualmente',t)})}catch(e){prompt('Copia manualmente',t)}};
-  if($('#eb-forget'))$('#eb-forget').onclick=()=>{forgetPat();$('#eb-n').textContent='Token rimosso da questo dispositivo'};
+  
   if(canPub)$('#eb-pub').onclick=async()=>{
     const out=$('#eb-n'),btn=$('#eb-pub');
     let pat=getPat();
-    if(!pat){pat=prompt('Token GitHub (fine-grained, solo repo roadmap-sunraee-reopen, permesso Contents: Read and write). Resta salvato su questo dispositivo per 30 giorni; "Dimentica token" lo rimuove.');if(!pat)return;pat=pat.trim();setPat(pat)}
+    if(!pat){pat=prompt('Token GitHub (fine-grained, solo repo roadmap-sunraee-reopen, permesso Contents: Read and write). Resta salvato su questo dispositivo per 30 giorni.');if(!pat)return;pat=pat.trim();setPat(pat)}
     const api='https://api.github.com/repos/massicuccistudio/roadmap-sunraee-reopen/contents/state.enc.json',H={Authorization:'Bearer '+pat,Accept:'application/vnd.github+json'};
     btn.disabled=true;let msg='';out.textContent='Pubblico…';
     try{
